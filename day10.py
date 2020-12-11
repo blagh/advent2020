@@ -21,16 +21,25 @@ def get_counts(map):
     for row in range(len(map)):
         for col in range(len(map[row])):
             if map[row][col] == OCCUPIED:
-                counts[row-1][col-1] += 1
-                counts[row-1][col] += 1
-                counts[row-1][col+1] += 1
-                counts[row][col-1] += 1
-                # counts[row][col]
-                counts[row][col+1] += 1
-                counts[row+1][col-1] += 1
-                counts[row+1][col] += 1
-                counts[row+1][col+1] += 1
+                mark_until(map, counts, row, col, -1, -1)
+                mark_until(map, counts, row, col, -1, 0)
+                mark_until(map, counts, row, col, -1, +1)
+                mark_until(map, counts, row, col, 0, -1)
+                # mark_until(map, counts, row, col, 0, 0)
+                mark_until(map, counts, row, col, 0, +1)
+                mark_until(map, counts, row, col, +1, -1)
+                mark_until(map, counts, row, col, +1, 0)
+                mark_until(map, counts, row, col, +1, +1)
+
+    print_counts(counts)
     return counts
+
+def mark_until(map, counts, row, col, x_dir, y_dir):
+    next_x = row + x_dir
+    next_y = col + y_dir
+    if next_x >= 0 and next_x < len(map) \
+      and next_y >= 0 and next_y < len(map[row]):
+      counts[next_x][next_y] += 1
 
 
 def get_spot(map, counts, row, col):
@@ -59,6 +68,10 @@ def check_equal(old, new):
                 print(n, old[n], new[n])
                 return False
     return True
+
+def print_counts(these_counts):
+    stringed = "\n".join("".join([str(i) for i in row]) for row in these_counts)
+    print(stringed + "\n")
 
 def print_stuff(this_map):
     stringed = "\n".join(this_map)
