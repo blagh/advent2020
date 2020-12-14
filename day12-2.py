@@ -1,8 +1,7 @@
-import math
+from math import sin, cos, radians, fabs
 
 R_COMPASS = "ESWN"
 L_COMPASS = "ENWS"
-
 
 class Nav:
     def __init__(self):
@@ -10,33 +9,38 @@ class Nav:
         self.way_y = 1
         self.x = 0
         self.y = 0
-        self.h = "E"
-
 
     def move(self, dir, dist):
         if dir == "F":
-            print(f"FORWARD {self.h}")
-            self.move(self.h, dist)
+            self.x += self.way_x * dist
+            self.y += self.way_y * dist
+            print(f"\nFORWARD {dist} ({self.way_x}, {self.way_y}): ({self.x}, {self.y})")
+
         elif dir in ["N", "E", "S", "W"]:
             if dir == "N":
-                self.x += dist
+                self.way_y += dist
             elif dir == "E":
-                self.y += dist
+                self.way_x += dist
             elif dir == "S":
-                self.x -= dist
+                self.way_y -= dist
             elif dir == "W":
-                self.y -= dist
-            print(f"{dir} {dist}: ({self.x}, {self.y})")
-        elif dir == "R":
-            units = int(dist / 90)
-            current = R_COMPASS.index(self.h)
-            self.h = R_COMPASS[(units + current) % 4]
-            print(f"NEW HEADING R {dist}: {self.h}")
-        elif dir == "L":
-            units = int(dist / 90)
-            current = L_COMPASS.index(self.h)
-            self.h = L_COMPASS[(units + current) % 4]
-            print(f"NEW HEADING L {dist}: {self.h}")
+                self.way_x -= dist
+            print(f"WAYPOINT {dir} {dist}: ({self.way_x}, {self.way_y})")
+        elif dir in ["R", "L"]:
+            rads = radians(dist)
+            s = sin(rads)
+            c = cos(rads)
+            x = self.way_x
+            y = self.way_y
+
+            if dir == "R":
+                self.way_x = round(x * c + y * s);
+                self.way_y = round(-x * s + y * c);
+                print(f"WAYPOINT R {dist}: ({self.way_x}, {self.way_y})")
+            elif dir == "L":
+                self.way_x = round(x * c - y * s);
+                self.way_y = round(x * s + y * c);
+                print(f"WAYPOINT L {dist}: ({self.way_x}, {self.way_y})")
 
 instructions = []
 
@@ -50,5 +54,5 @@ for line in instructions:
     if line:
         nav.move(line[0], int(line[1:]))
 
-print(nav.x, nav.y, nav.h)
-print(math.fabs(nav.x) + math.fabs(nav.y))
+print(nav.x, nav.y, nav.way_x, nav.way_y)
+print(fabs(nav.x) + fabs(nav.y))
