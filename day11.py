@@ -53,7 +53,7 @@ def get_spot(map, counts, row, col):
         return EMPTY_SEAT
     return spot
 
-with open("day10input.txt") as file:
+with open("day11input.txt") as file:
     map = file.readlines()
     map = [m[:-1] for m in map] # trim newlines
 

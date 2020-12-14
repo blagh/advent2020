@@ -54,19 +54,15 @@ def mark_until(map, counts, row, col, x_dir, y_dir):
 def get_spot(map, counts, row, col):
     spot = map[row][col]
     surround_count = counts[row][col]
-        # print(row, col, map[row][col], surrounded)
-        # print(f" {map[row-1][col]} \n", f"{map[row][col-1]}{map[row][col]}{map[row][col+1]}\n", f" {map[row+1][col]} \n")
-        # print("")
-    # # If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
-    # # If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty
-    #
+    # If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+    # If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty
     if spot == EMPTY_SEAT and surround_count == 0:
         return OCCUPIED
     if spot == OCCUPIED and surround_count >= 5:
         return EMPTY_SEAT
     return spot
 
-with open("day10input.txt") as file:
+with open("day11input.txt") as file:
     map = file.readlines()
     map = [m[:-1] for m in map] # trim newlines
 
