@@ -126,21 +126,19 @@ def add_to_map(map, tile, off_x, off_y):
         line = tile.lines[y]
         for x in range(TILE_WIDTH):
             thing = line[x]
+            print(off_y + y, off_x + x)
             map[off_y + y][off_x + x] = thing
 
 
 def print_map(map):
     print("\n\n ~~~ full map ~~~ ")
-    max_y = max(map.keys()) + 1
+    max_y = len(map)
     for y in range(max_y):
         line = map[y]
         line_str = ""
-        max_x = max(line.keys()) + 1
+        max_x = len(line)
         for x in range(max_x):
-            if (x % TILE_WIDTH and y % TILE_WIDTH):
-                line_str += line[x]
-            else:
-                line_str += "*" if line[x] == "#" else " "
+            line_str += line[x]
 
         print(line_str)
 
@@ -154,15 +152,21 @@ while tile.left is not None or tile.top is not None:
     # print(tile.left.id if tile.left else None, tile.top.id if tile.top else None, tile)
 
 # print([t.id if t else None for t in tile.border_tiles], tile)
-complete_map = defaultdict(lambda: defaultdict(lambda: "`"))
+tile_length = 30
+complete_map = [["m" for x in range(tile_length)] for l in range(tile_length)]
+print("print this fucker")
+print_map(complete_map)
 
 x = 0
 y = 0
-while tile.bottom:
+while tile is not None:
     first_tile = tile
-    while tile.right:
+    while tile is not None:
         add_to_map(complete_map, tile, x, y)
         print_map(complete_map)
+
+        if not tile.right:
+            break
 
         while tile != tile.right.left:
             print("\n", tile.id, tile.right.left.id if tile.right.left else "None")
@@ -178,6 +182,9 @@ while tile.bottom:
         print("look at this right ~~~", tile.right)
         tile = tile.right
         x += 1
+
+    if not first_tile.bottom:
+        break
 
     while first_tile != first_tile.bottom.top:
         print("\n", first_tile.id, first_tile.bottom.left.id if first_tile.bottom.left else "None")
@@ -195,3 +202,7 @@ while tile.bottom:
     y += 1
 
 print_map(complete_map)
+complete_map = rotate(complete_map)
+complete_map = flip(complete_map)
+print_map(complete_map)
+# print_map("".join())
