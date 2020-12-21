@@ -33,7 +33,6 @@ def bus_lcm(buses):
             n.append(buses[i])
             a.append(i)
 
-
     print(n, a)
     (sum, prod, mod_prod) = chinese_remainder(n, a)
     return prod - mod_prod
