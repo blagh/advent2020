@@ -1,5 +1,6 @@
 
 from functools import reduce
+from itertools import product
 
 INACTIVE = "."
 ACTIVE = "#"
@@ -75,72 +76,40 @@ def step(map):
         for col in range(len(map[row])):
             new_row = []
             for pln in range(len(map[row][col])):
-                new_row.append(get_spot(map, count_map, row, col, pln))
+                new_tim = []
+                for tim in range(len(map[row][col][pln])):
+                    new_tim.append(get_spot(map, count_map, row, col, pln, tim))
+                new_row.append(new_tim)
             new_pln.append(new_row)
         new_map.append(new_pln)
     return new_map
 
 def get_counts(map):
-    counts = [[[0 for i in range(len(map[0][0]))] for i in range(len(map[0]))] for i in range(len(map))]
+    counts = [[[[0 for i in range(len(map[0][0][0]))] for i in range(len(map[0][0]))] for i in range(len(map[0]))] for i in range(len(map))]
+    positions = [-1, 0, 1]
+    surroundings = product(positions, repeat=4)
+
     for row in range(len(map)):
         for col in range(len(map[row])):
             for pln in range(len(map[row][col])):
                 if map[row][col][pln] == ACTIVE:
-                    mark(map, counts, row, col, pln, -1, -1, -1)
-                    mark(map, counts, row, col, pln, -1, -1, 0)
-                    mark(map, counts, row, col, pln, -1, -1, +1)
-
-                    mark(map, counts, row, col, pln, -1, 0, -1)
-                    mark(map, counts, row, col, pln, -1, 0, 0)
-                    mark(map, counts, row, col, pln, -1, 0, +1)
-
-                    mark(map, counts, row, col, pln, -1, +1, -1)
-                    mark(map, counts, row, col, pln, -1, +1, 0)
-                    mark(map, counts, row, col, pln, -1, +1, +1)
-
-                    mark(map, counts, row, col, pln, 0, -1, -1)
-                    mark(map, counts, row, col, pln, 0, -1, 0)
-                    mark(map, counts, row, col, pln, 0, -1, +1)
-
-                    mark(map, counts, row, col, pln, 0, 0, -1)
-                    # mark(map, counts, row, col, pln, 0, 0, 0)
-                    mark(map, counts, row, col, pln, 0, 0, +1)
-
-                    mark(map, counts, row, col, pln, 0, +1, -1)
-                    mark(map, counts, row, col, pln, 0, +1, 0)
-                    mark(map, counts, row, col, pln, 0, +1, +1)
-
-                    mark(map, counts, row, col, pln, +1, -1, -1)
-                    mark(map, counts, row, col, pln, +1, -1, 0)
-                    mark(map, counts, row, col, pln, +1, -1, +1)
-
-                    mark(map, counts, row, col, pln, +1, 0, -1)
-                    mark(map, counts, row, col, pln, +1, 0, 0)
-                    mark(map, counts, row, col, pln, +1, 0, +1)
-
-                    mark(map, counts, row, col, pln, +1, +1, -1)
-                    mark(map, counts, row, col, pln, +1, +1, 0)
-                    mark(map, counts, row, col, pln, +1, +1, +1)
-
+                    for surround in surroundings:
+                        if surround != (0, 0, 0, 0):
+                            mark(map, counts, row, col, pln, *surround)
 
     print_counts(counts)
     return counts
 
-def mark(map, counts, row, col, pln, x_dir, y_dir, z_dir):
+def mark(map, counts, row, col, pln, tim, x_dir, y_dir, z_dir, a_dir):
     next_x = row + x_dir
     next_y = col + y_dir
     next_z = pln + z_dir
-    if next_x >= 0 and next_x < len(map) \
-      and next_y >= 0 and next_y < len(map[row]) \
-      and next_z >= 0 and next_z < len(map[row][col]):
-      counts[next_x][next_y][next_z] += 1
+    next_a = pln + a_dir
+    counts[next_x][next_y][next_z][next_a] += 1
 
-    # print_counts(counts)
-
-
-def get_spot(map, counts, row, col, pln):
-    spot = map[row][col][pln]
-    surround_count = counts[row][col][pln]
+def get_spot(map, counts, row, col, pln, tim):
+    spot = map[row][col][pln][tim]
+    surround_count = counts[row][col][pln][tim]
     # If a cube is active and exactly 2 or 3 of its neighbors are also active, the cube remains active. Otherwise, the cube becomes inactive.
     # If a cube is inactive but exactly 3 of its neighbors are active, the cube becomes active. Otherwise, the cube remains inactive.
     if spot == INACTIVE and surround_count == 3:
@@ -157,14 +126,16 @@ def check_equal(old, new):
                 return False
     return True
 
-def print_counts(these_counts):
+def print_counts(this_map):
     stringed = ""
-    for x in range(len(these_counts)):
-        for z in range(len(these_counts[0][0])):
-            for y in range(len(these_counts[0])):
-                stringed += str(these_counts[x][y][z])
-            stringed += " "
-        stringed += "\n"
+    for a in range(len(this_map[0][0][0])):
+        for x in range(len(this_map)):
+            for z in range(len(this_map[0][0])):
+                for y in range(len(this_map[0])):
+                    stringed += str(this_map[x][y][z][a])
+                stringed += " "
+            stringed += "\n"
+        stringed += "---------\n"
     print(stringed)
 
 def print_stuff(this_map):
