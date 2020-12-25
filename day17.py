@@ -7,8 +7,6 @@ ACTIVE = "#"
 map = []
 
 def expand(map):
-    print_stuff(map)
-
     max_x = len(map)
     max_y = len(map[0])
     max_z = len(map[0][0])
@@ -32,6 +30,7 @@ def expand(map):
 
     if should_add_border:
         new_map = add_border(map)
+        print_stuff(new_map)
 
     return new_map
 
@@ -70,10 +69,13 @@ def step(map):
     count_map = get_counts(map)
 
     for row in range(len(map)):
-        new_row = ""
+        new_pln = []
         for col in range(len(map[row])):
-            new_row += get_spot(map, count_map, row, col)
-        new_map.append(new_row)
+            new_row = []
+            for pln in range(len(map[row][col])):
+                new_row.append(get_spot(map, count_map, row, col, pln))
+            new_pln.append(new_row)
+        new_map.append(new_pln)
     return new_map
 
 def get_counts(map):
@@ -98,7 +100,10 @@ def get_counts(map):
                     mark(map, counts, row, col, pln, 0, -1, 0)
                     mark(map, counts, row, col, pln, 0, -1, +1)
 
-                    # mark(map, counts, row, col, 0, 0, 0)
+                    mark(map, counts, row, col, pln, 0, 0, -1)
+                    # mark(map, counts, row, col, pln, 0, 0, 0)
+                    mark(map, counts, row, col, pln, 0, 0, +1)
+
                     mark(map, counts, row, col, pln, 0, +1, -1)
                     mark(map, counts, row, col, pln, 0, +1, 0)
                     mark(map, counts, row, col, pln, 0, +1, +1)
@@ -131,14 +136,14 @@ def mark(map, counts, row, col, pln, x_dir, y_dir, z_dir):
     # print_counts(counts)
 
 
-def get_spot(map, counts, row, col):
-    spot = map[row][col]
-    surround_count = counts[row][col]
+def get_spot(map, counts, row, col, pln):
+    spot = map[row][col][pln]
+    surround_count = counts[row][col][pln]
     # If a cube is active and exactly 2 or 3 of its neighbors are also active, the cube remains active. Otherwise, the cube becomes inactive.
     # If a cube is inactive but exactly 3 of its neighbors are active, the cube becomes active. Otherwise, the cube remains inactive.
     if spot == INACTIVE and surround_count == 3:
         return ACTIVE
-    if spot == ACTIVE and (surround_count != 2 or surround_count != 3):
+    if spot == ACTIVE and surround_count not in [2,3]:
         return INACTIVE
     return spot
 
@@ -152,9 +157,9 @@ def check_equal(old, new):
 
 def print_counts(these_counts):
     stringed = ""
-    for z in range(len(these_counts[0][0])):
-        for y in range(len(these_counts[0])):
-            for x in range(len(these_counts)):
+    for x in range(len(these_counts)):
+        for z in range(len(these_counts[0][0])):
+            for y in range(len(these_counts[0])):
                 stringed += str(these_counts[x][y][z])
             stringed += " "
         stringed += "\n"
@@ -162,13 +167,13 @@ def print_counts(these_counts):
 
 def print_stuff(this_map):
     stringed = ""
-    for z in range(len(this_map[0][0])):
-        for y in range(len(this_map[0])):
-            for x in range(len(this_map)):
+    for x in range(len(this_map)):
+        for z in range(len(this_map[0][0])):
+            for y in range(len(this_map[0])):
                 stringed += this_map[x][y][z]
             stringed += " "
         stringed += "\n"
-
+        
     active_count = reduce(lambda a, b: a + 1 if b == ACTIVE else a, stringed, 0)
     print(stringed + f"count: {active_count}")
     print()
@@ -181,8 +186,9 @@ with open("day17input.txt") as file:
 
 n = 0
 max = 7
-map = expand(map)
 print_stuff(map)
+
+map = expand(map)
 
 while n < max:
     new_map = step(map)
@@ -201,3 +207,5 @@ while n < max:
     n += 1
     if n == max:
         print("and we're done !!")
+
+print("should be: 112")
