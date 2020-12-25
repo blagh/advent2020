@@ -76,7 +76,9 @@ def step(map):
             for pln in range(len(map[row][col])):
                 new_tim = []
                 for tim in range(len(map[row][col][pln])):
-                    new_tim.append(get_spot(map, count_map, row, col, pln, tim))
+                    spot = map[row][col][pln][tim]
+                    active_count = count_map[row][col][pln][tim]
+                    new_tim.append(get_spot(spot, active_count))
                 new_row.append(new_tim)
             new_pln.append(new_row)
         new_map.append(new_pln)
@@ -102,12 +104,10 @@ def mark(counts, row, col, pln, tim, x_dir, y_dir, z_dir, a_dir):
     next_x = row + x_dir
     next_y = col + y_dir
     next_z = pln + z_dir
-    next_a = pln + a_dir
+    next_a = tim + a_dir
     counts[next_x][next_y][next_z][next_a] += 1
 
-def get_spot(map, counts, row, col, pln, tim):
-    spot = map[row][col][pln][tim]
-    surround_count = counts[row][col][pln][tim]
+def get_spot(spot, surround_count):
     # If a cube is active and exactly 2 or 3 of its neighbors are also active, the cube remains active. Otherwise, the cube becomes inactive.
     # If a cube is inactive but exactly 3 of its neighbors are active, the cube becomes active. Otherwise, the cube remains inactive.
     if spot == INACTIVE and surround_count == 3:
@@ -158,7 +158,7 @@ with open("day17input.txt") as file:
     map = [[[[n]] for n in m[:-1]] for m in map] # trim newlines
 
 n = 0
-max = 2
+max = 6
 print_stuff(map)
 
 map = expand(map)
@@ -181,5 +181,3 @@ while n <= max:
     if n == max:
         print("and we're done !!")
         break
-
-print("should be: 112")
