@@ -55,8 +55,6 @@ def add_border(map):
     max_z = len(map[0][0]) + 2
     max_a = len(map[0][0][0]) + 2
 
-    print(max_x, max_y, max_z, max_a)
-
     new_map = [[[[INACTIVE for a in range(max_a)] for z in range(max_z)] for y in range(max_y)] for x in range(max_x)]
     for x in range(len(map)):
         for y in range(len(map[x])):
@@ -86,21 +84,21 @@ def step(map):
 
 def get_counts(map):
     counts = [[[[0 for i in range(len(map[0][0][0]))] for i in range(len(map[0][0]))] for i in range(len(map[0]))] for i in range(len(map))]
-    positions = [-1, 0, 1]
-    surroundings = product(positions, repeat=4)
+    surroundings = list(product([-1, 0, 1], repeat=4))
 
     for row in range(len(map)):
         for col in range(len(map[row])):
             for pln in range(len(map[row][col])):
-                if map[row][col][pln] == ACTIVE:
-                    for surround in surroundings:
-                        if surround != (0, 0, 0, 0):
-                            mark(map, counts, row, col, pln, *surround)
+                for tim in range(len(map[row][col][pln])):
+                    if map[row][col][pln][tim] == ACTIVE:
+                        for surround in surroundings:
+                            if surround != (0, 0, 0, 0):
+                                mark(counts, row, col, pln, tim, *surround)
 
     print_counts(counts)
     return counts
 
-def mark(map, counts, row, col, pln, tim, x_dir, y_dir, z_dir, a_dir):
+def mark(counts, row, col, pln, tim, x_dir, y_dir, z_dir, a_dir):
     next_x = row + x_dir
     next_y = col + y_dir
     next_z = pln + z_dir
@@ -132,7 +130,7 @@ def print_counts(this_map):
         for x in range(len(this_map)):
             for z in range(len(this_map[0][0])):
                 for y in range(len(this_map[0])):
-                    stringed += str(this_map[x][y][z][a])
+                    stringed += f"{this_map[x][y][z][a]:2} "
                 stringed += " "
             stringed += "\n"
         stringed += "---------\n"
@@ -160,7 +158,7 @@ with open("day17input.txt") as file:
     map = [[[[n]] for n in m[:-1]] for m in map] # trim newlines
 
 n = 0
-max = 6
+max = 2
 print_stuff(map)
 
 map = expand(map)
