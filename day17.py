@@ -173,7 +173,7 @@ def print_stuff(this_map):
                 stringed += this_map[x][y][z]
             stringed += " "
         stringed += "\n"
-        
+
     active_count = reduce(lambda a, b: a + 1 if b == ACTIVE else a, stringed, 0)
     print(stringed + f"count: {active_count}")
     print()
@@ -185,13 +185,13 @@ with open("day17input.txt") as file:
     map = [[[n] for n in m[:-1]] for m in map] # trim newlines
 
 n = 0
-max = 7
+max = 6
 print_stuff(map)
 
 map = expand(map)
 
-while n < max:
-    new_map = step(map)
+while n <= max:
+    new_map = step(expand(map))
     active_count = print_stuff(new_map)
 
     if active_count == 0:
@@ -203,9 +203,10 @@ while n < max:
         print("no changes!!")
         print(f"it took {n} rounds")
         break
-    map = expand(new_map)
+    map = new_map
     n += 1
     if n == max:
         print("and we're done !!")
+        break
 
 print("should be: 112")
