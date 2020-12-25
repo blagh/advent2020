@@ -7,34 +7,49 @@ ACTIVE = "#"
 map = []
 
 def expand(map):
+    max_x = len(map)
+    max_y = len(map[0])
     planes = [
-        [0, 0, 1, 0, len(map[0])],
-        [0, 0, 0, 1, len(map)],
-        [len(map), 0, 0, 1, len(map[0])],
-        [0, len(map[0]), 1, 0, len(map)]
+        [0, 0, 1, 0, max_x],
+        [0, 0, 0, 1, max_y],
+        [0, max_y - 1, 1, 0, max_x],
+        [max_x - 1, 0, 0, 1, max_y]
     ]
 
-    add_border = False
+    print(planes)
+
+    should_add_border = False
     new_map = map
     for plane in planes:
         count = count_plane(map, *plane)
+        print(count)
         if count > 0:
-            new_map = expand_plane(map, *plane)
+            should_add_border = True
 
+    if should_add_border:
+        new_map = add_border(map)
 
-
-    return map
+    return new_map
 
 def count_plane(map, x, y, x_dir, y_dir, max):
-    return 0
-    # count = 0
-    # for diff in range(max):
-    #     if map[x + x_dir * diff][y + y_dir * diff] == ACTIVE:
-    #         count += 1
-    # return count
+    count = 0
+    for diff in range(max):
+        if map[x + x_dir * diff][y + y_dir * diff] == ACTIVE:
+            count += 1
+    return count
 
-def expand_plane(map, x, y, x_dir, y_dir, max):
-    return map
+
+def add_border(map):
+    max_x = len(map) + 2
+    max_y = len(map[0]) + 2
+
+    new_map = [[INACTIVE for y in range(max_y)] for x in range(max_x)]
+    for x in range(len(map)):
+        row = map[x]
+        for y in range(len(row)):
+            new_map[x+1][y+1] = map[x][y]
+
+    return new_map
 
 
 def step(map):
