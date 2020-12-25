@@ -7,46 +7,60 @@ ACTIVE = "#"
 map = []
 
 def expand(map):
+    print_stuff(map)
+
     max_x = len(map)
     max_y = len(map[0])
+    max_z = len(map[0][0])
     planes = [
-        [0, 0, 1, 0, max_x],
-        [0, 0, 0, 1, max_y],
-        [0, max_y - 1, 1, 0, max_x],
-        [max_x - 1, 0, 0, 1, max_y]
-    ]
+        [0, 0, 0, max_x, max_y, 1],
+        [0, 0, 0, max_x, 1, max_z],
+        [0, 0, 0, 1, max_y, max_z],
 
-    print_stuff(map)
+        [0, 0, max_z-1, max_x, max_y, max_z],
+        [0, max_y-1, 0, max_x, max_y, max_z],
+        [max_x-1, 0, 0, max_x, max_y, max_z],
+    ]
 
     should_add_border = False
     new_map = map
     for plane in planes:
-        count = count_plane(map, *plane)
-        if count > 0:
-            should_add_border = True
+        should_add_border = should_expand(map, *plane)
+        if should_add_border:
+            print("expanding ~~~")
+            break
 
     if should_add_border:
         new_map = add_border(map)
 
     return new_map
 
-def count_plane(map, x, y, x_dir, y_dir, max):
-    count = 0
-    for diff in range(max):
-        if map[x + x_dir * diff][y + y_dir * diff] == ACTIVE:
-            count += 1
-    return count
+def should_expand(map, x, y, z, max_x, max_y, max_z):
+    #print([x, max_x], [y, max_y], [z, max_z])
+    #print([x, max_x - x], [y, max_y - y], [z, max_z - z])
+    #print(list(range(x, max_x - x)), list(range(y, max_y - y)), list(range(z, max_z - z)))
+    for x_pos in range(x, max_x - x):
+        for y_pos in range(y, max_y - y):
+            for z_pos in range(z, max_z - z):
+                # print(x_pos, y_pos, z_pos, map[x_pos][y_pos][z_pos] == ACTIVE)
+                if map[x_pos][y_pos][z_pos] == ACTIVE:
+                    return True
+
+    return False
 
 
 def add_border(map):
     max_x = len(map) + 2
     max_y = len(map[0]) + 2
+    max_z = len(map[0][0]) + 2
 
-    new_map = [[INACTIVE for y in range(max_y)] for x in range(max_x)]
+    new_map = [[[INACTIVE for z in range(max_z)] for y in range(max_y)] for x in range(max_x)]
     for x in range(len(map)):
         row = map[x]
         for y in range(len(row)):
-            new_map[x+1][y+1] = map[x][y]
+            col = row[y]
+            for z in range(len(col)):
+                new_map[x+1][y+1][z+1] = map[x][y][z]
 
     return new_map
 
@@ -137,21 +151,33 @@ def check_equal(old, new):
     return True
 
 def print_counts(these_counts):
-    stringed = "\n\n".join("\n".join([str(i) for i in row]) for row in these_counts)
-    print(stringed + "\n")
+    stringed = ""
+    for z in range(len(these_counts[0][0])):
+        for y in range(len(these_counts[0])):
+            for x in range(len(these_counts)):
+                stringed += str(these_counts[x][y][z])
+            stringed += " "
+        stringed += "\n"
+    print(stringed)
 
 def print_stuff(this_map):
-    stringed = "\n\n".join("\n".join(["".join(i) for i in row]) for row in this_map)
+    stringed = ""
+    for z in range(len(this_map[0][0])):
+        for y in range(len(this_map[0])):
+            for x in range(len(this_map)):
+                stringed += this_map[x][y][z]
+            stringed += " "
+        stringed += "\n"
 
     active_count = reduce(lambda a, b: a + 1 if b == ACTIVE else a, stringed, 0)
-    print(stringed, active_count)
+    print(stringed + f"count: {active_count}")
     print()
 
     return active_count
 
 with open("day17input.txt") as file:
     map = file.readlines()
-    map = [[[n for n in m[:-1]] for m in map]] # trim newlines
+    map = [[[n] for n in m[:-1]] for m in map] # trim newlines
 
 n = 0
 max = 7
