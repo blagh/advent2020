@@ -1,0 +1,18 @@
+67,7,59,61
+
+N = 4 (mod 17) and N = 2 (mod 13) and N = 3 (mod 19)
+
+
+13,x,x,41,x,x,x,x,x,x,x,x,x,569,x,29,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,19,x,x,x,23,x,x,x,x,x,x,x,937,x,x,x,x,x,37,x,x,x,x,x,x,x,x,x,x,17
+ 0 1 2  3 4 5 6 7 8 9 0 1 2  13 4 15 6 7 8 8 9 0 1 2 3 4 5 6 7 8 9 0 31 2 3 4 35 6 7 8 9 0 1 2  43 4 5 6 7 8 49 0 1 2 3 4 5 6 7 8 9 60
+
+
+N = 0 (mod 13)
+and N = 3 (mod 41)
+and N = 13 (mod 569)
+and N = 15 (mod 29)
+and N = 31 (mod 19) 
+and N = 35 (mod 23)
+and N = 43 (mod 937)
+and N = 49 (mod 37)
+and N = 60 (mod 17)
