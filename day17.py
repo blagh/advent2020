@@ -16,13 +16,12 @@ def expand(map):
         [max_x - 1, 0, 0, 1, max_y]
     ]
 
-    print(planes)
+    print_stuff(map)
 
     should_add_border = False
     new_map = map
     for plane in planes:
         count = count_plane(map, *plane)
-        print(count)
         if count > 0:
             should_add_border = True
 
@@ -64,29 +63,56 @@ def step(map):
     return new_map
 
 def get_counts(map):
-    counts = [[0 for i in range(len(map[0]))] for i in range(len(map))]
+    counts = [[[0 for i in range(len(map[0][0]))] for i in range(len(map[0]))] for i in range(len(map))]
     for row in range(len(map)):
         for col in range(len(map[row])):
-            if map[row][col] == ACTIVE:
-                mark(map, counts, row, col, -1, -1)
-                mark(map, counts, row, col, -1, 0)
-                mark(map, counts, row, col, -1, +1)
-                mark(map, counts, row, col, 0, -1)
-                # mark(map, counts, row, col, 0, 0)
-                mark(map, counts, row, col, 0, +1)
-                mark(map, counts, row, col, +1, -1)
-                mark(map, counts, row, col, +1, 0)
-                mark(map, counts, row, col, +1, +1)
+            for pln in range(len(map[row][col])):
+                if map[row][col][pln] == ACTIVE:
+                    mark(map, counts, row, col, pln, -1, -1, -1)
+                    mark(map, counts, row, col, pln, -1, -1, 0)
+                    mark(map, counts, row, col, pln, -1, -1, +1)
+
+                    mark(map, counts, row, col, pln, -1, 0, -1)
+                    mark(map, counts, row, col, pln, -1, 0, 0)
+                    mark(map, counts, row, col, pln, -1, 0, +1)
+
+                    mark(map, counts, row, col, pln, -1, +1, -1)
+                    mark(map, counts, row, col, pln, -1, +1, 0)
+                    mark(map, counts, row, col, pln, -1, +1, +1)
+
+                    mark(map, counts, row, col, pln, 0, -1, -1)
+                    mark(map, counts, row, col, pln, 0, -1, 0)
+                    mark(map, counts, row, col, pln, 0, -1, +1)
+
+                    # mark(map, counts, row, col, 0, 0, 0)
+                    mark(map, counts, row, col, pln, 0, +1, -1)
+                    mark(map, counts, row, col, pln, 0, +1, 0)
+                    mark(map, counts, row, col, pln, 0, +1, +1)
+
+                    mark(map, counts, row, col, pln, +1, -1, -1)
+                    mark(map, counts, row, col, pln, +1, -1, 0)
+                    mark(map, counts, row, col, pln, +1, -1, +1)
+
+                    mark(map, counts, row, col, pln, +1, 0, -1)
+                    mark(map, counts, row, col, pln, +1, 0, 0)
+                    mark(map, counts, row, col, pln, +1, 0, +1)
+
+                    mark(map, counts, row, col, pln, +1, +1, -1)
+                    mark(map, counts, row, col, pln, +1, +1, 0)
+                    mark(map, counts, row, col, pln, +1, +1, +1)
+
 
     print_counts(counts)
     return counts
 
-def mark(map, counts, row, col, x_dir, y_dir):
+def mark(map, counts, row, col, pln, x_dir, y_dir, z_dir):
     next_x = row + x_dir
     next_y = col + y_dir
+    next_z = pln + z_dir
     if next_x >= 0 and next_x < len(map) \
-      and next_y >= 0 and next_y < len(map[row]):
-      counts[next_x][next_y] += 1
+      and next_y >= 0 and next_y < len(map[row]) \
+      and next_z >= 0 and next_z < len(map[row][col]):
+      counts[next_x][next_y][next_z] += 1
 
     # print_counts(counts)
 
@@ -102,10 +128,6 @@ def get_spot(map, counts, row, col):
         return INACTIVE
     return spot
 
-with open("day17input.txt") as file:
-    map = file.readlines()
-    map = [[n for n in m[:-1]] for m in map] # trim newlines
-
 def check_equal(old, new):
     for n in range(len(old)):
         for m in range(len(old[n])):
@@ -115,11 +137,11 @@ def check_equal(old, new):
     return True
 
 def print_counts(these_counts):
-    stringed = "\n".join("".join([str(i) for i in row]) for row in these_counts)
+    stringed = "\n\n".join("\n".join([str(i) for i in row]) for row in these_counts)
     print(stringed + "\n")
 
 def print_stuff(this_map):
-    stringed = "\n".join("".join([str(i) for i in row]) for row in this_map)
+    stringed = "\n\n".join("\n".join(["".join(i) for i in row]) for row in this_map)
 
     active_count = reduce(lambda a, b: a + 1 if b == ACTIVE else a, stringed, 0)
     print(stringed, active_count)
@@ -127,11 +149,14 @@ def print_stuff(this_map):
 
     return active_count
 
+with open("day17input.txt") as file:
+    map = file.readlines()
+    map = [[[n for n in m[:-1]] for m in map]] # trim newlines
+
 n = 0
 max = 7
-
-print_stuff(map)
 map = expand(map)
+print_stuff(map)
 
 while n < max:
     new_map = step(map)
