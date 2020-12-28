@@ -20,12 +20,6 @@ class OptionRule:
             key = "'".join(key)
         STASH[repr(self)][key] = value
 
-    # def generate_messages(self, rules, depth):
-    #     print(TAB*depth, "OPTION", self.options)
-    #     messages = sum([o.generate_messages(rules, depth+1) for o in self.options], [])
-    #     print(TAB*depth, "OPTION", messages)
-    #     return messages
-
     def matches(self, message, depth):
         options = self.options
         if type(message) != list:
@@ -206,10 +200,6 @@ with open("day19rules.txt") as file:
 
 for r in sorted(RULES.keys()):
     print(r, RULES[r])
-
-# valid_messages = rules[0].generate_messages(rules, 0)
-# print(valid_messages)
-# aaabbbbbbaaaabaababaabababbabaaabbababababaaa
 
 messages = []
 with open("day19input.txt") as file:
