@@ -77,17 +77,15 @@ for f in field_positions:
     print(f"{f}: {field_positions[f]}")
 
 made_a_change = True
-finished_fields = []
 while made_a_change:
     made_a_change = False
     for field in field_positions:
-        if field not in finished_fields:
-            if len(field_positions[field]) == 1:
-                index = list(field_positions[field])[0]
-                for other_field in field_positions:
-                    if field != other_field and index in field_positions[other_field]:
-                        field_positions[other_field].remove(index)
-                        made_a_change = True
+        if len(field_positions[field]) == 1:
+            index = list(field_positions[field])[0]
+            for other_field in field_positions:
+                if field != other_field and index in field_positions[other_field]:
+                    field_positions[other_field].remove(index)
+                    made_a_change = True
 
 print("")
 for f in field_positions:
