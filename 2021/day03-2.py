@@ -7,14 +7,7 @@ print(lines)
 line_len = len(lines[0])
 
 def count_ones(position, lines):
-    total_lines = len(lines)
-    one_count = 0
-
-    for l in lines:
-        if l[i] == "1":
-            one_count += 1
-
-    return one_count
+    return len(list(filter(lambda l: l[position] == "1", lines)))
 
 def filter_lines(req_char, position, lines):
     return list(filter(lambda l: l[position] == req_char, lines))
@@ -56,4 +49,4 @@ co2_rate = int(co2_cands[0], base=2)
 
 print(o2_rate, co2_rate)
 print(o2_rate * co2_rate)
-print(1353024)
+print(o2_rate * co2_rate == 1353024)
