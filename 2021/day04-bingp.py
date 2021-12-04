@@ -13,6 +13,7 @@ class Board:
         self.marked = [[self._false] * 5 for i in range(5)]
 
     def mark(self, number):
+        # using itertools so we don't need to break out of nested loops
         for i, j in itertools.product(range(5), range(5)):
             if self.lines[i][j] == number:
                 self.marked[i][j] = self._true
@@ -28,15 +29,17 @@ class Board:
 
     def check_victory(self):
         for i in range(5):
-            # check row i
-            if not self._false in self.marked[i]:
-                return True
-
-            # check column i
+            empty_col_found = False
             empty_row_found = False
             for j in range(5):
+                if self.marked[i][j] == self._false:
+                    empty_col_found = True
+
                 if self.marked[j][i] == self._false:
                     empty_row_found = True
+
+            if not empty_col_found:
+                return True
 
             if not empty_row_found:
                 return True
