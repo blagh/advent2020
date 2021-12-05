@@ -53,10 +53,16 @@ with open("day05.txt") as file:
     for l in file_lines:
         points = l.split(" -> ")
         line = Line(*points)
-        line.draw(map)
-        lines.append(line)
 
-print(lines)
+        # part 1
+        # if line.is_straight():
+        #   line.draw(map)
+
+        # part 2
+        line.draw(map)
+
+        print(line)
+
 map_str = ""
 for l in map:
     for c in l:
