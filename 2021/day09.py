@@ -39,7 +39,47 @@ for i in range(len(map)):
 
         if lowest:
             print(cell, ":", above, below, leftt, right)
-            low_points.append(cell)
+            low_points.append((i, j))
             low_sum += int(cell) + 1
 
 print(low_points, low_sum)
+
+row_len = len(map[i])
+col_len = len(map)
+visited = [["."] * row_len for i in range(col_len)]
+
+def basin_size(i, j, depth):
+    print(" " * depth, "checking (", i, j, ")")
+
+    if i >= len(map) or j >= len(map[i]) or i < 0 or j < 0:
+        return 0
+
+
+    if map[i][j] == "9" or visited[i][j] == "*":
+        if map[i][j] == "9":
+            visited[i][j] = "^"
+
+        return 0
+
+    visited[i][j] = "*"
+
+    return basin_size(i+1, j, depth + 1) + basin_size(i-1, j, depth + 1) + basin_size(i, j+1, depth + 1) + basin_size(i, j-1, depth + 1) + 1
+
+basins = []
+for point in low_points:
+    size = basin_size(point[0], point[1], 0)
+
+    print("done")
+    print("\n".join("".join(m) for m in visited), "\n----\n")
+
+    basins.append(size)
+
+print(basins)
+
+max_1 = max(basins)
+basins.remove(max_1)
+max_2 = max(basins)
+basins.remove(max_2)
+max_3 = max(basins)
+
+print(max_1 * max_2 * max_3)
