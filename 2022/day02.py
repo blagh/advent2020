@@ -72,7 +72,7 @@ def round_score_2(their_choice, my_outcome):
     return SHAPE_SCORE[my_choice] + ROUND_SCORE_2[my_outcome]
 
 score = 0
-with open("day2input.txt") as file:
+with open("day02input.txt") as file:
     for line in file.readlines():
         their_choice, my_choice = line[0:-1].split(" ")
         score += round_score_2(their_choice, my_choice)

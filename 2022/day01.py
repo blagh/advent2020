@@ -1,6 +1,6 @@
 lines = []
 
-with open("day1input.txt") as file:
+with open("day01input.txt") as file:
     lines = file.readlines()
 
 sums = []

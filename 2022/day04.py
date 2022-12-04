@@ -1,7 +1,7 @@
 contained_count = 0
 overlap_sum = 0
 
-with open("day4input.txt") as file:
+with open("day04input.txt") as file:
     for assignment in file.readlines():
         assignment = assignment[:-1]
 

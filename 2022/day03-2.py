@@ -15,7 +15,7 @@ def get_priority(char):
 
     return priority
 
-with open("day3input.txt") as file:
+with open("day03input.txt") as file:
     rucksacks = [line[:-1] for line in file.readlines()]
 
 for index in range(0, len(rucksacks), 3):

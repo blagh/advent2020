@@ -1,7 +1,7 @@
 
 
 sum = 0
-with open("day3input.txt") as file:
+with open("day03input.txt") as file:
     for rucksack in file.readlines():
         rucksack = rucksack[:-1]
 
