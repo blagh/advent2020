@@ -30,11 +30,9 @@ for index in range(0, len(rucksacks), 3):
     
     print(common_set)
     common_char = common_set.pop()
-
     print(common_char)
 
     priority = get_priority(common_char)
-
     print(priority)
 
     sum += priority
