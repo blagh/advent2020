@@ -16,7 +16,7 @@ with open("day04input.txt") as file:
         first_set = set(range(first[0], first[1] + 1))
         secnd_set = set(range(secnd[0], secnd[1] + 1))
 
-        overlap = len(first_set.intersection(secnd_set))
+        overlap = first_set.intersection(secnd_set)
         if overlap:
             overlap_sum += 1
 
