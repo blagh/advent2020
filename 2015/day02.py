@@ -26,17 +26,17 @@ def calculate_ribbon(box):
 
     bow = l*w*h
 
-    print(box, bow)
+    # print(box, bow)
 
     if h > l and h > w:        
-        print("height", h, "is largest, l", l, "w", w, 2*w + 2*l)
-        return bow + 2*w + 2*l
+        # print("height", h, "is largest, l", l, "w", w, 2*w + 2*l)
+        return bow + w + w + l + l
     elif l > h and l > w:
-        print("length", l, "is largest, h", h, "w", w, 2*h + 2*w)
-        return bow + 2*h + 2*w
+        # print("length", l, "is largest, h", h, "w", w, 2*h + 2*w)
+        return bow + h + h + w + w
     else:
-        print("width", w, "is largest, h", h, "l", l, 2*h + 2*l)
-        return bow + 2*h + 2*l
+        # print("width", w, "is largest, h", h, "l", l, 2*h + 2*l)
+        return bow + h + h + l + l
 
 tests = [
     ([2,3,4], 34),
@@ -47,9 +47,7 @@ tests = [
     ([4,2,3], 34),
     ([1,1,10], 14),
     ([1,10,1], 14),
-    ([10,1,1], 14),
-    ([10,9,8], 754),
-    ([15,15,7], 1619)
+    ([10,1,1], 14)
 ]
 
 for input, expected in tests:
@@ -58,11 +56,4 @@ for input, expected in tests:
     print(input, output, "expected", expected)
     assert(output == expected)
 
-ribbon_sum = 0
-for p in presents:
-    ribbon = calculate_ribbon(p)
-    ribbon_sum += ribbon
-
-    print(ribbon, ribbon_sum)
-
-print(ribbon_sum)
+print(sum([calculate_ribbon(p) for p in presents]))
