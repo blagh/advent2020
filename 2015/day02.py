@@ -50,10 +50,12 @@ tests = [
     ([10,1,1], 14)
 ]
 
-for input, expected in tests:
-    output = calculate_ribbon(input)
+def run_tests(tests, test_method):
+    for input, expected in tests:
+        output = test_method(input)
 
-    print(input, output, "expected", expected)
-    assert(output == expected)
+        print(input, output, "expected", expected)
+        assert(output == expected)
 
+run_tests(tests, calculate_ribbon)
 print(sum([calculate_ribbon(p) for p in presents]))
