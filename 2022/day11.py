@@ -69,7 +69,7 @@ MEGA_MODULO = reduce(lambda acc, m: acc * m.test_divisor, monkeys, 1)
 
 print(monkeys)
 
-for i in range(1, 10):
+for i in range(1, 10001):
     print("round", i)
     round(monkeys, MEGA_MODULO)
     print(monkeys)
